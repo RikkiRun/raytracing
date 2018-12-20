@@ -3,28 +3,42 @@
 #include<math.h>
 #include <stdlib.h>
 #include "vec3.h"
+#include "ray.h"
 
 using namespace std;
 
+
+vec3 color(const ray& r) {
+	vec3 unit_direction = unit_vector(r.direction());
+	float t = 0.5 * (unit_direction.y() + 1.0);
+	return (1.0 - t) * vec3(1.0, 1.0, 1.0) + t * vec3(0.9, 0.5, 0.2);
+}
 
 int main()
 {
 
 	int nx = 200;
 	int ny = 100;
-	ofstream outfile("chapter1.ppm", ios_base::out);
+	ofstream outfile("chapter3.ppm", ios_base::out);
 	// Output to .ppm file
 	outfile << "P3\n" << nx << " " << ny << "\n255\n";
 	// output to command line
 	std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 
+	vec3 lower_left_corner(-2.0, -1.0, -1.0);
+	vec3 horizontal(4.0, 0.0, 0.0);
+	vec3 vertical(0.0, 2.0, 0.0);
+	vec3 origin(0.0, 0.0, 0.0);
 
 	// Draw image pixels from top to bottom, left to right
 	for (int j = ny-1; j >= 0; j--)
 	{
 		for (int i = 0; i < nx; i++)
 		{
-			vec3 col(float(i) / float(nx), float(j) / float(ny), 0.2);
+			float u = float(i) / float(nx);
+			float v = float(j) / float(ny);
+			ray r(origin, lower_left_corner + u * horizontal + v * vertical);
+			vec3 col = color(r);
 			//Get rgb values within range (0.0, 1.0)
 		    //Cast to integers and map to (0, 255)
 			int ir = int(255.99*col[0]);
