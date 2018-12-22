@@ -7,7 +7,6 @@
 
 class vec3 {
 
-
 public:
 
 	// using same class for colors, locations, directions, offsets ... 
